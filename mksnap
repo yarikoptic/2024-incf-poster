@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# helper to move most recent snapshot and then take URL from clipboard
+
+set -eu
+name="$1"
+
+url=$(xclip -o)
+
+if ! echo "$url" | grep -q "^https*://"; then
+    echo "ERROR: pasted '$url' not URL"
+    exit 1
+fi
+
+screenshot=$(/bin/ls -t ~/Pictures/Screenshots/* | head -n 1)
+mv "$screenshot" "$name.png"
+
+../bids-website/tools/mkqrcode_bids -o "$name-qr.png" "$url"
+
+echo "QR code: $name-qr-png ; URL: $url ; Screenshot: $name.png"
+eog "$name.png"
