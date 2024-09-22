@@ -15,7 +15,10 @@ fi
 screenshot=$(/bin/ls -t ~/Pictures/Screenshots/* | head -n 1)
 mv "$screenshot" "$name.png"
 
+dropshadow "$name.png" no-mv
+
 ../bids-website/tools/mkqrcode_bids -o "$name-qr.png" "$url"
+dropshadow "$name-qr.png" no-mv
 
 echo "QR code: $name-qr-png ; URL: $url ; Screenshot: $name.png"
-eog "$name.png"
+eog "$name-shadow.png"

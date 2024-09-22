@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+import argparse
+from PIL import Image
+import os
+
+def generate_svg_with_overlay(image1_path, image2_path, output_svg_path):
+    # Load the images to get their dimensions
+    image1 = Image.open(image1_path)
+    image2 = Image.open(image2_path)
+
+    # Get the dimensions of both images
+    width1, height1 = image1.size  # Dimensions of the first (background) image
+    width2, height2 = image2.size  # Dimensions of the second (overlay) image
+
+    # Shrink the second image to half its size
+    width2_half = width2 // 2
+    height2_half = height2 // 2
+
+    # Calculate the top-right corner position for the overlay
+    x_position = width1 - width2_half
+    y_position = 0
+
+    # SVG content creation
+    svg_content = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width1}" height="{height1}" viewBox="0 0 {width1} {height1}">
+        <!-- First PNG (background image) -->
+        <image href="{os.path.basename(image1_path)}" x="0" y="0" width="{width1}" height="{height1}" />
+        
+        <!-- Second PNG (overlay, shrunk to half and placed in the top-right corner) -->
+        <image href="{os.path.basename(image2_path)}" x="{x_position}" y="{y_position}" width="{width2_half}" height="{height2_half}" />
+    </svg>'''
+
+    # Write the SVG to the output file
+    with open(output_svg_path, "w") as svg_file:
+        svg_file.write(svg_content)
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate SVG with one image overlaying another")
+    parser.add_argument("image1", help="Path to the first PNG image (background)")
+    parser.add_argument("image2", help="Path to the second PNG image (overlay)")
+    parser.add_argument("-o", "--output", required=True, help="Path to the output SVG file")
+
+    args = parser.parse_args()
+
+    generate_svg_with_overlay(args.image1, args.image2, args.output)
+
+if __name__ == "__main__":
+    main()

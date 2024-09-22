@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -eu
+name="$1"
+name="${name%.png}"
+name="${name%-qr}"
+
+qrimage="${name}-qr-shadow.png"
+image="${name}-shadow.png"
+
+echo "NAME: $name"
+zbarimg --quiet --raw "$qrimage"
+
+echo "copying to clipboard"
+xclip -selection clipboard -t image/png "$qrimage"
+sleep 1
+xclip -selection clipboard -t image/png "$image"
