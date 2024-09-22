@@ -22,3 +22,5 @@ dropshadow "$name-qr.png" no-mv
 
 echo "QR code: $name-qr-png ; URL: $url ; Screenshot: $name.png"
 eog "$name-shadow.png"
+
+./copytoclip "$name"
